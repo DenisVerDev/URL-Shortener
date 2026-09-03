@@ -5,13 +5,7 @@ namespace URL_Shortener.Services
 {
     public interface IURLsViewingService
     {
-        Task<URL?> ViewURLAsync(int id);
-
-        Task<URL?> ViewURLAsync(string shortUrlId);
-
         Task<URLsViewingResult> ViewURLsAsync(int creatorId);
-
-        Task<List<URL>> ViewURLsAsync(Expression<Func<URL, bool>> predicate); // I will think about pagination later
     }
 
     public class URLsViewingResult
