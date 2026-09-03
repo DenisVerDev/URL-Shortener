@@ -15,13 +15,13 @@ namespace URL_Shortener.Data.Repositories
             return url;
         }
 
-        public virtual async Task<URL> CreateURLAsync(string originalUrl, User creator) // I hope EF automatically fills URLs nav prop in User
+        public virtual async Task<URL> CreateURLAsync(string originalUrl, string shortUrlId, int creatorId)
         {
             var url = new URL
             {
                 OriginalURL = originalUrl,
-                ShortURLId = Guid.NewGuid().ToString(),
-                Creator = creator
+                ShortURLId = shortUrlId,
+                CreatorId = creatorId
             };
 
             return await AddURLAsync(url);
