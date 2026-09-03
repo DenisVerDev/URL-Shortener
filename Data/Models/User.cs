@@ -4,17 +4,18 @@ namespace URL_Shortener.Data.Models
 {
     public class User
     {
-        [Key]
         public int Id { get; set; }
 
-        public string Login { get; set; }
+        public string Login { get; set; } = null!;
 
-        public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = null!;
 
-        public DateTime RegistrationDate { get; set; } = DateTime.Now;
+        public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
 
-        public Role Role { get; set; }
+        public int RoleId { get; set; }
 
-        public List<URL> URLs { get; set; }
+        public Role Role { get; set; } = null!;
+
+        public ICollection<URL> URLs { get; set; } = new List<URL>();
     }
 }

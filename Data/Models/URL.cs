@@ -4,15 +4,16 @@ namespace URL_Shortener.Data.Models
 {
     public class URL
     {
-        [Key]
         public int Id { get; set; }
 
-        public string OriginalURL { get; set; }
+        public string OriginalURL { get; set; } = null!;
 
-        public string ShortURLId { get; set; }
+        public string ShortURLId { get; set; } = null!;
 
-        public DateTime CreationDate { get; set; } = DateTime.Now;
+        public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
-        public User Creator { get; set; }
+        public int CreatorId { get; set; }
+
+        public User Creator { get; set; } = null!;
     }
 }
