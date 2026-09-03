@@ -11,13 +11,17 @@ namespace URL_Shortener.Data.Repositories
 
         Task<URL?> FindURLAsync(int id);
 
-        Task<URL?> FindURLAsync(Expression<Func<URL, bool>> predicate);
+        Task<URL?> FindURLAsync(string originalUrl);
 
         Task<List<URL>> FindURLsAsync(int creatorId);
 
         Task<List<URL>> FindURLsAsync(Expression<Func<URL, bool>> predicate);
 
         Task<URL?> FirstURLAsync();
+
+        Task<URL?> FirstURLAsync(int creatorId);
+
+        Task<URL?> FirstURLAsync(Expression<Func<URL, bool>> predicate);
 
         Task<URL?> LastURLAsync();
 
@@ -28,5 +32,7 @@ namespace URL_Shortener.Data.Repositories
         Task DeleteURLAsync(URL url);
 
         Task DeleteURLsAsync(IEnumerable<URL> urls);
+
+        Task<bool> AnyURLAsync(Expression<Func<URL, bool>> predicate);
     }
 }

@@ -30,6 +30,9 @@ namespace URL_Shortener.Data.Repositories
         public virtual async Task<URL?> FindURLAsync(int id)
             => await _dbContext.URLs.FindAsync(id);
 
+        public virtual async Task<URL?> FindURLAsync(string originalUrl)
+            => await _dbContext.URLs.FirstOrDefaultAsync(u => u.OriginalURL == originalUrl);
+
         public virtual async Task<URL?> FindURLAsync(Expression<Func<URL, bool>> predicate)
             => await _dbContext.URLs.FirstOrDefaultAsync(predicate);
 
@@ -42,14 +45,20 @@ namespace URL_Shortener.Data.Repositories
         public virtual async Task<URL?> FirstURLAsync()
             => await _dbContext.URLs.FirstOrDefaultAsync();
 
+        public virtual async Task<URL?> FirstURLAsync(int creatorId)
+            => await _dbContext.URLs.FirstOrDefaultAsync(u => u.Creator.Id == creatorId);
+
+        public virtual async Task<URL?> FirstURLAsync(Expression<Func<URL, bool>> predicate)
+            => await _dbContext.URLs.FirstOrDefaultAsync(predicate);
+
         public virtual async Task<URL?> LastURLAsync()
             => await _dbContext.URLs.LastOrDefaultAsync();
 
         public virtual async Task<URL?> LastURLAsync(int creatorId)
-            => await _dbContext.URLs.Where(u=>u.Creator.Id == creatorId).LastOrDefaultAsync();
+            => await _dbContext.URLs.LastOrDefaultAsync(u=>u.Creator.Id == creatorId);
 
         public virtual async Task<URL?> LastURLAsync(Expression<Func<URL, bool>> predicate)
-            => await _dbContext.URLs.Where(predicate).LastOrDefaultAsync();
+            => await _dbContext.URLs.LastOrDefaultAsync(predicate);
 
         public virtual async Task DeleteURLAsync(URL url)
         {
@@ -62,5 +71,8 @@ namespace URL_Shortener.Data.Repositories
             _dbContext.URLs.RemoveRange(urls);
             await _dbContext.SaveChangesAsync();
         }
+
+        public virtual async Task<bool> AnyURLAsync(Expression<Func<URL, bool>> predicate)
+            => await _dbContext.URLs.AnyAsync(predicate);
     }
 }
