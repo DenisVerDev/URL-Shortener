@@ -1,6 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using URL_Shortener.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<UShortDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("LocalDb")));
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
