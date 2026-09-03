@@ -4,7 +4,7 @@ using bc = BCrypt.Net.BCrypt;
 
 namespace URL_Shortener.Services
 {
-    public class UserVerificationService (IUsersRepository _ur) : IUserVerification
+    public class UserVerificationService (IUsersRepository _ur) : IUserVerificationService
     {
         public virtual async Task<UserVerificationResult> VerifyUserAsync(string login, string password)
         {

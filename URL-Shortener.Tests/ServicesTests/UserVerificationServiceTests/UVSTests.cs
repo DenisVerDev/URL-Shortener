@@ -12,7 +12,7 @@ namespace URL_Shortener.Tests.ServicesTests.UserVerificationServiceTests
     public class UVSTests
     {
         private IUsersRepository _ur;
-        private IUserVerification _uv;
+        private IUserVerificationService _uvs;
 
         private const string _login = "denver";
         private const string _password = "admin123";
@@ -34,14 +34,14 @@ namespace URL_Shortener.Tests.ServicesTests.UserVerificationServiceTests
             A.CallTo(() => _ur.FindUserAsync(A<string>._)).Returns((User?)null);
             A.CallTo(() => _ur.FindUserAsync(_user.Login)).Returns(_user);
 
-            _uv = new UserVerificationService(_ur);
+            _uvs = new UserVerificationService(_ur);
         }
 
         [Fact]
         public async Task VerifyUserAsync_AccurateLoginAndPassword_ReturnsSuccess()
         {
             // Act
-            var result = await _uv.VerifyUserAsync(_login, _password);
+            var result = await _uvs.VerifyUserAsync(_login, _password);
 
             // Assert
             Assert.NotNull(result);
@@ -53,7 +53,7 @@ namespace URL_Shortener.Tests.ServicesTests.UserVerificationServiceTests
         public async Task VerifyUserAsync_AccurateLoginAndPassword_ReturnsUnchangedRealUser()
         {
             // Act
-            var result = await _uv.VerifyUserAsync(_login, _password);
+            var result = await _uvs.VerifyUserAsync(_login, _password);
 
             // Assert
             Assert.NotNull(result);
@@ -70,7 +70,7 @@ namespace URL_Shortener.Tests.ServicesTests.UserVerificationServiceTests
         public async Task VerifyUserAsync_WrongLogin_ReturnsAbsentUser()
         {
             // Act
-            var result = await _uv.VerifyUserAsync("abrakadbra", _password);
+            var result = await _uvs.VerifyUserAsync("abrakadbra", _password);
 
             // Assert
             Assert.NotNull(result);
@@ -82,7 +82,7 @@ namespace URL_Shortener.Tests.ServicesTests.UserVerificationServiceTests
         public async Task VerifyUserAsync_WrongPassword_ReturnsVerificationFailure()
         {
             // Act
-            var result = await _uv.VerifyUserAsync(_login, "12345678");
+            var result = await _uvs.VerifyUserAsync(_login, "12345678");
 
             // Assert
             Assert.NotNull(result);
@@ -98,7 +98,7 @@ namespace URL_Shortener.Tests.ServicesTests.UserVerificationServiceTests
         public async Task VerifyUserAsync_NullOrEmptyLoginAndPassword_ThrowsArgumentException(string? login, string? password)
         {
             // Act
-            var exception = await Record.ExceptionAsync(() => _uv.VerifyUserAsync(login, password));
+            var exception = await Record.ExceptionAsync(() => _uvs.VerifyUserAsync(login, password));
 
             // Assert
             Assert.NotNull(exception);

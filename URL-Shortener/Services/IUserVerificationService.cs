@@ -2,7 +2,7 @@
 
 namespace URL_Shortener.Services
 {
-    public interface IUserVerification
+    public interface IUserVerificationService
     {
         Task<UserVerificationResult> VerifyUserAsync(string login, string password);
     }
