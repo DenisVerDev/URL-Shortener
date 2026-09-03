@@ -9,15 +9,13 @@ namespace URL_Shortener.Data.Repositories
 
         Task<User?> FindUserAsync(string login);
 
-        Task<User?> FindUserAsync(Expression<Func<User, bool>> predicate);
-
         Task<List<User>> FindUsersAsync(int roleId);
-
-        Task<List<User>> FindUsersAsync(DateTime registraionDate);
 
         Task<List<User>> FindUsersAsync(Expression<Func<User, bool>> predicate);
 
         Task<User?> FirstUserAsync();
+
+        Task<User?> FirstUserAsync(Expression<Func<User, bool>> predicate);
 
         Task<User?> LastUserAsync();
 
