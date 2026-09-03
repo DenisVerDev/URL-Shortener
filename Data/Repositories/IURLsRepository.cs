@@ -7,7 +7,7 @@ namespace URL_Shortener.Data.Repositories
     {
         Task<URL> AddURLAsync(URL url);
 
-        Task<URL> CreateURLAsync(string originalUrl, User creator);
+        Task<URL> CreateURLAsync(string originalUrl, string shortUrlId, int creatorId);
 
         Task<URL?> FindURLAsync(int id);
 
