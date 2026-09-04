@@ -97,7 +97,7 @@ namespace URL_Shortener.Controllers
             }
         }
 
-        [Authorize(Roles = 1)]
+        [Authorize(Roles = "1")]
         [HttpDelete("/delete/personal/{id}")]
         public async Task<IActionResult> DeletePersonalURL(int id)
         {
@@ -114,7 +114,7 @@ namespace URL_Shortener.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = 2)]
+        [Authorize(Roles = "2")]
         [HttpDelete("/delete/{id}")]
         public async Task<IActionResult> DeleteURL(int id)
         {
