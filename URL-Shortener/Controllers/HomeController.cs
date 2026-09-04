@@ -26,7 +26,7 @@ namespace URL_Shortener.Controllers
         }
 
         [HttpGet("/urls")]
-        public async Task<IActionResult> PaginateURLs([FromBody] UrlsFilterFormModel model)
+        public async Task<IActionResult> PaginateURLs([FromQuery] UrlsFilterFormModel model)
         {
             if (!ModelState.IsValid)
                 return ValidationProblem(ModelState);

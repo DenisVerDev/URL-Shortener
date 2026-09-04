@@ -1,5 +1,11 @@
 <div class="application">
+  @if (isAuthenticated) {
   <app-url-shortener />
+  } @else {
+  <div class="alert alert-info application__notice">
+    You must log in before shortening URLs.
+  </div>
+  }
 
-  <!-- The URL table component will be added here later. -->
+  <app-urls-table />
 </div>

@@ -1,0 +1,173 @@
+<section class="urls-panel"
+         aria-labelledby="urls-table-title">
+
+  <div class="urls-panel__header">
+    <h2 id="urls-table-title"
+        class="urls-panel__title">
+
+      Shortened URLs
+    </h2>
+
+    @if (totalCount() > 0) {
+    <span class="badge text-bg-secondary">
+      {{ totalCount() }} total
+    </span>
+    }
+  </div>
+
+  @if (isLoading()) {
+  <div class="urls-panel__message"
+       role="status">
+
+    <div class="spinner-border text-primary"
+         aria-hidden="true">
+    </div>
+
+    <span>Loading URLs...</span>
+  </div>
+  } @else if (errorMessage()) {
+  <div class="alert alert-danger mb-0"
+       role="alert">
+
+    <div class="d-flex flex-column flex-sm-row gap-2 align-items-sm-center justify-content-sm-between">
+      <span>
+        {{ errorMessage() }}
+      </span>
+
+      <button type="button"
+              class="btn btn-outline-danger btn-sm"
+              (click)="loadPage(pageIndex())">
+
+        Try again
+      </button>
+    </div>
+  </div>
+  } @else if (urls().length === 0) {
+  <div class="urls-panel__message">
+    <span>
+      No URLs have been shortened yet.
+    </span>
+  </div>
+  } @else {
+  <div class="table-responsive urls-panel__table-wrapper">
+    <table class="table table-hover align-middle mb-0 urls-table">
+
+      <colgroup>
+        <col class="urls-table__original-column">
+        <col class="urls-table__short-column">
+      </colgroup>
+
+      <thead>
+        <tr>
+          <th scope="col">
+            Original URL
+          </th>
+
+          <th scope="col">
+            Shortened URL
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (url of urls(); track url.id) {
+        <tr>
+          <td>
+            <a class="urls-table__link"
+               [href]="url.originalURL"
+               [title]="url.originalURL"
+               target="_blank"
+               rel="noopener noreferrer">
+
+              {{ url.originalURL }}
+            </a>
+          </td>
+
+          <td>
+            <a class="urls-table__link"
+               [href]="shortenedUrl(url.shortURLId)"
+               [title]="shortenedUrl(url.shortURLId)"
+               target="_blank"
+               rel="noopener noreferrer">
+
+              {{ shortenedUrl(url.shortURLId) }}
+            </a>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalPages() > 1) {
+  <div class="urls-panel__pagination">
+    <span class="text-body-secondary small">
+      Page {{ currentPageNumber() }} of {{ totalPages() }}
+    </span>
+
+    <nav aria-label="URL table pages">
+      <ul class="pagination pagination-sm mb-0">
+
+        <li class="page-item"
+            [class.disabled]="pageIndex() === 0">
+
+          <button type="button"
+                  class="page-link"
+                  aria-label="Previous page"
+                  [disabled]="pageIndex() === 0 || isLoading()"
+                  (click)="previousPage()">
+
+            <span class="d-none d-sm-inline">
+              Previous
+            </span>
+
+            <span class="d-sm-none"
+                  aria-hidden="true">
+
+              ‹
+            </span>
+          </button>
+        </li>
+
+        @for (page of visiblePageIndexes(); track page) {
+        <li class="page-item"
+            [class.active]="page === pageIndex()">
+
+          <button type="button"
+                  class="page-link"
+                  [attr.aria-current]="page === pageIndex() ? 'page' : null"
+                  [disabled]="isLoading()"
+                  (click)="loadPage(page)">
+
+            {{ page + 1 }}
+          </button>
+        </li>
+        }
+
+        <li class="page-item"
+            [class.disabled]="pageIndex() >= totalPages() - 1">
+
+          <button type="button"
+                  class="page-link"
+                  aria-label="Next page"
+                  [disabled]="pageIndex() >= totalPages() - 1 || isLoading()"
+                  (click)="nextPage()">
+
+            <span class="d-none d-sm-inline">
+              Next
+            </span>
+
+            <span class="d-sm-none"
+                  aria-hidden="true">
+
+              ›
+            </span>
+          </button>
+        </li>
+
+      </ul>
+    </nav>
+  </div>
+  }
+  }
+</section>
