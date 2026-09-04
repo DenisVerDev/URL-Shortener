@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Linq.Expressions;
 using URL_Shortener.Data.Models;
 using URL_Shortener.Data.Repositories;
 
@@ -14,6 +15,14 @@ namespace URL_Shortener.Services
             var urls = await _urlsR.FindURLsAsync(creatorId);
 
             return new URLsViewingResult(urls, URLsOperationResultCode.Success);
+        }
+
+        public async Task<URLsViewingResult> ViewURLsAsync(int pageIndex, int pageSize)
+        {
+            var urls = await _urlsR.FindURLsAsync(pageIndex, pageSize);
+
+            return urls.IsNullOrEmpty() ? new URLsViewingResult(null, URLsOperationResultCode.AbsentURLs) :
+                                          new URLsViewingResult(urls, URLsOperationResultCode.Success);
         }
     }
 }

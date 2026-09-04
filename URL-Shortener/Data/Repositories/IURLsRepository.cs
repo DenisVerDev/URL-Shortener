@@ -17,6 +17,8 @@ namespace URL_Shortener.Data.Repositories
 
         Task<List<URL>> FindURLsAsync(Expression<Func<URL, bool>> predicate);
 
+        Task<List<URL>> FindURLsAsync(int pageIndex = 0, int pageSize = 10);
+
         Task<URL?> FirstURLAsync();
 
         Task<URL?> FirstURLAsync(int creatorId);

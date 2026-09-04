@@ -37,10 +37,13 @@ namespace URL_Shortener.Data.Repositories
             => await _dbContext.URLs.FirstOrDefaultAsync(predicate);
 
         public virtual async Task<List<URL>> FindURLsAsync(int creatorId)
-            => await _dbContext.URLs.Where(u => u.Creator.Id == creatorId).ToListAsync();
+            => await _dbContext.URLs.Where(u => u.Creator.Id == creatorId).OrderByDescending(u=>u.CreationDate).ToListAsync(); // bad stuff
 
         public virtual async Task<List<URL>> FindURLsAsync(Expression<Func<URL, bool>> predicate)
-            => await _dbContext.URLs.Where(predicate).ToListAsync();
+            => await _dbContext.URLs.Where(predicate).OrderByDescending(u => u.CreationDate).ToListAsync();
+
+        public virtual async Task<List<URL>> FindURLsAsync(int pageIndex, int pageSize)
+            => await _dbContext.URLs.Skip(pageIndex).Take(pageSize).OrderByDescending(u=>u.CreationDate).ToListAsync();
 
         public virtual async Task<URL?> FirstURLAsync()
             => await _dbContext.URLs.FirstOrDefaultAsync();
