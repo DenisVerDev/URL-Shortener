@@ -47,7 +47,7 @@ export class App {
       return null;
     }
 
-    return `${window.location.origin}/${id}`;
+    return `${window.location.origin}/short/${id}`;
   });
 
   protected get urlControl(): FormControl<string> {
