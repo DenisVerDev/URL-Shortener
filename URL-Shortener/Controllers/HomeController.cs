@@ -17,6 +17,13 @@ namespace URL_Shortener.Controllers
             return View();
         }
 
+        [HttpGet("/short/{shortUrlId}")]
+        public async Task<IActionResult> RedirectToOriginalURL(string shortUrlId)
+        {
+            var url = await _urlR.FirstURLAsync(u=>u.ShortURLId == shortUrlId);
+            return url is null ? View() : Redirect(url.OriginalURL);
+        }
+
         public IActionResult Privacy()
         {
             return View();
