@@ -8,16 +8,18 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace URL_Shortener.Services.ShorteningAlgorithms
 {
-    public class URLShortenSHA256 (IURLsRepository _urlR) : IURLShortenAlgorithm
+    public class URLShortenSHA256 (IURLsRepository _urlR, IConfiguration _c) : IURLShortenAlgorithm
     {
         public virtual async Task<string?> ShortenURLAsync(string url)
         {
             byte[] hash = HashURL(url);
             string hashBase62 = Base62.Default.Encode(hash);
 
-            for (int i = 0; i < hashBase62.Length - 5; i += 5)
+            int shortUrlIdLength = _c.GetValue<int>("ShorteningAlgorithms:URLShortenSHA256:Length");
+
+            for (int i = 0; i < hashBase62.Length - shortUrlIdLength; i += shortUrlIdLength)
             {
-                string shortUrlId = hashBase62.Substring(i, 5);
+                string shortUrlId = hashBase62.Substring(i, shortUrlIdLength);
 
                 if (await _urlR.AnyURLAsync(u => u.ShortURLId == shortUrlId))
                     continue;
