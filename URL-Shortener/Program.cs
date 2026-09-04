@@ -16,6 +16,8 @@ builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IURLsRepository, URLsRepository>();
 
+builder.Services.AddScoped<IURLShortenAlgorithm, URLShortenSHA256>();
+
 builder.Services.AddScoped<IUserVerificationService, UserVerificationService>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddScoped<IUserSessionService, UserSessionService>();
