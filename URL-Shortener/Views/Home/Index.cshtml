@@ -1,9 +1,25 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@inject IHttpContextAccessor HCA
 
-<div class="text-center">
-    <h1 class="display-4">Welcome @HCA.HttpContext?.User.Identity?.Name</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <app-root></app-root>
+}
+else
+{
+    <div class="alert alert-info text-center mt-2">
+        You must log in before shortening URLs.
+    </div>
+}
+
+@section Scripts
+{
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <script type="module"
+                src="~/angular/browser/main.js"
+                asp-append-version="true">
+        </script>
+    }
+}
