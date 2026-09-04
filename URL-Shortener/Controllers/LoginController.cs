@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using URL_Shortener.Auth;
 using URL_Shortener.Models.Forms;
 using URL_Shortener.Services;
 
 namespace URL_Shortener.Controllers
 {
+    [AnonymousOnly]
     public class LoginController (IUserManagementService _ums, IUserVerificationService _uvs, IUserSessionService _uss) : Controller
     {
         public IActionResult Index()

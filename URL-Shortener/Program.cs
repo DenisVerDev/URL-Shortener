@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using URL_Shortener.Data;
 using URL_Shortener.Data.Repositories;
@@ -21,6 +22,22 @@ builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 builder.Services.AddScoped<IURLsManagementService, URLsManagementService>();
 builder.Services.AddScoped<IURLsViewingService, URLsViewingService>();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(opt =>
+                {
+                    opt.LoginPath = "/Login";
+                    opt.LogoutPath = "/Logout";
+                    opt.AccessDeniedPath = "/";
+                    
+                    opt.SlidingExpiration = true;
+                    opt.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+
+                    opt.Cookie.Name = "UrlShortenerAuthCookie";
+                    opt.Cookie.SameSite = SameSiteMode.Lax; // for now
+                    opt.Cookie.HttpOnly = true;
+                    opt.Cookie.IsEssential = true;
+                });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -34,6 +51,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
