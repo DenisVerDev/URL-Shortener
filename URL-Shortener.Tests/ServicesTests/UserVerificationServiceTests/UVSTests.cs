@@ -46,7 +46,7 @@ namespace URL_Shortener.Tests.ServicesTests.UserVerificationServiceTests
             // Assert
             Assert.NotNull(result);
             Assert.NotNull(result.User);
-            Assert.Equal(UserVerificationResultCode.Success, result.Status);
+            Assert.Equal(UserOperationResultCode.Success, result.Status);
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace URL_Shortener.Tests.ServicesTests.UserVerificationServiceTests
             // Assert
             Assert.NotNull(result);
             Assert.Null(result.User);
-            Assert.Equal(UserVerificationResultCode.AbsentUser, result.Status);
+            Assert.Equal(UserOperationResultCode.AbsentUser, result.Status);
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace URL_Shortener.Tests.ServicesTests.UserVerificationServiceTests
             // Assert
             Assert.NotNull(result);
             Assert.Null(result.User);
-            Assert.Equal(UserVerificationResultCode.VerificationFailure, result.Status);
+            Assert.Equal(UserOperationResultCode.VerificationFailure, result.Status);
         }
 
         [Theory]

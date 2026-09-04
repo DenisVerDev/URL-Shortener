@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Create new account";
+}
+@model RegisterFormModel
+
+<form method="post">
+    <div>
+        <input asp-for="Login" type="text" placeholder="Login"/>
+        <span asp-validation-for="Login"></span>
+    </div>
+    <div>
+        <input asp-for="Password" type="password" placeholder="Password"/>
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <input asp-for="PasswordConfirmation" type="password" placeholder="Confirm your password"/>
+        <span asp-validation-for="PasswordConfirmation"></span>
+    </div>
+    <div>
+        <button type="submit">Register</button>
+    </div>
+</form>

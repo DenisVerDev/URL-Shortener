@@ -11,19 +11,12 @@ namespace URL_Shortener.Services
     {
         public User? User { get; private set; }
 
-        public UserVerificationResultCode Status { get; private set; }
+        public UserOperationResultCode Status { get; private set; }
 
-        public UserVerificationResult(User? user, UserVerificationResultCode status)
+        public UserVerificationResult(User? user, UserOperationResultCode status)
         {
             User = user;
             Status = status;
         }
-    }
-
-    public enum UserVerificationResultCode
-    {
-        Success,
-        AbsentUser,
-        VerificationFailure
     }
 }

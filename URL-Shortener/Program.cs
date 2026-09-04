@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using URL_Shortener.Data;
 using URL_Shortener.Data.Repositories;
@@ -16,9 +17,27 @@ builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IURLsRepository, URLsRepository>();
 
 builder.Services.AddScoped<IUserVerificationService, UserVerificationService>();
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 builder.Services.AddScoped<IURLsManagementService, URLsManagementService>();
 builder.Services.AddScoped<IURLsViewingService, URLsViewingService>();
-builder.Services.AddScoped<IUserSessionService, UserSessionService>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(opt =>
+                {
+                    opt.LoginPath = builder.Configuration["Cookies:AuthCookie:LoginPath"];
+                    opt.LogoutPath = builder.Configuration["Cookies:AuthCookie:LogoutPath"];
+                    opt.AccessDeniedPath = builder.Configuration["Cookies:AuthCookie:AccessDeniedPath"];
+
+                    opt.SlidingExpiration = builder.Configuration.GetValue<bool>("Cookies:AuthCookie:SlidingExpiration");
+                    opt.ExpireTimeSpan = TimeSpan.FromMinutes(builder.Configuration
+                                                  .GetValue<int>("Cookies:AuthCookie:ExpireTimeSpanInMinutes"));
+
+                    opt.Cookie.Name = builder.Configuration["Cookies:AuthCookie:BrowserName"];
+                    opt.Cookie.SameSite = builder.Configuration.GetValue<SameSiteMode>("Cookies:AuthCookie:SameSite");
+                    opt.Cookie.HttpOnly = builder.Configuration.GetValue<bool>("Cookies:AuthCookie:HttpOnly");
+                    opt.Cookie.IsEssential = builder.Configuration.GetValue<bool>("Cookies:AuthCookie:IsEssential");
+                });
 
 var app = builder.Build();
 
@@ -33,6 +52,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
