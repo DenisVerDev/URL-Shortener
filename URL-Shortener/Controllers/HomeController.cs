@@ -35,12 +35,14 @@ namespace URL_Shortener.Controllers
 
             var result = await _uvs.ViewURLsAsync(model.PageIndex, model.PageSize);
 
-            bool parseResult = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int userId);
+            bool parseUserIdResult = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int userId);
+            bool paresUserRoleResult = int.TryParse(User.FindFirstValue(ClaimTypes.Role), out int roleId);
 
             var urlDtos = result.URLs?.Select(u => new UrlDTO
             {
                 Id = u.Id,
-                IsUserCreator = User.Identity.IsAuthenticated && parseResult ? userId == u.Id : false,
+                IsUserAuthority = User.Identity.IsAuthenticated && parseUserIdResult && paresUserRoleResult ? 
+                                  userId == u.Id || roleId == 2 : false, // 2 means admin
                 OriginalURL = u.OriginalURL,
                 ShortURLId = u.ShortURLId
             }).ToList() ?? [];
