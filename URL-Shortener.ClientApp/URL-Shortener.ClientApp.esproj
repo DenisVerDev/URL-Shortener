@@ -3,6 +3,6 @@
     <StartupCommand>npm start</StartupCommand>
     <BuildCommand>npm run build</BuildCommand>
     <ProductionBuildCommand>npm run build</ProductionBuildCommand>
-    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\url-shortener-client\browser</BuildOutputFolder>
+    <BuildOutputFolder>$(MSBuildProjectDirectory)\..\URL-Shortener\wwwroot\angular</BuildOutputFolder>
   </PropertyGroup>
 </Project>
