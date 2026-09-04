@@ -1,25 +1,21 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+
+    bool isAuthenticated =
+        User.Identity?.IsAuthenticated == true;
+
+    bool isAdmin =
+        User.IsInRole("2");
 }
 
-@if (User.Identity?.IsAuthenticated == true)
-{
-    <app-root></app-root>
-}
-else
-{
-    <div class="alert alert-info text-center mt-2">
-        You must log in before shortening URLs.
-    </div>
-}
+<app-root data-is-authenticated="@isAuthenticated.ToString().ToLowerInvariant()"
+          data-is-admin="@isAdmin.ToString().ToLowerInvariant()">
+</app-root>
 
 @section Scripts
 {
-    @if (User.Identity?.IsAuthenticated == true)
-    {
-        <script type="module"
-                src="~/angular/browser/main.js"
-                asp-append-version="true">
-        </script>
-    }
+    <script type="module"
+            src="~/angular/browser/main.js"
+            asp-append-version="true">
+    </script>
 }

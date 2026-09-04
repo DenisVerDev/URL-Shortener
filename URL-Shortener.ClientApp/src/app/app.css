@@ -1,108 +1,14 @@
 :host {
   display: block;
-}
-
-.shortener {
-  width: min(100%, 880px);
-  margin: 0 auto;
-  padding: 1.25rem 0.75rem 0;
-}
-
-.shortener__title {
-  margin: 0 0 1rem;
-  color: #212529;
-  font-size: 1.75rem;
-  font-weight: 650;
-  text-align: center;
-}
-
-.shortener__form {
-  margin: 0;
-}
-
-.shortener__controls {
   width: 100%;
 }
 
-  .shortener__controls .form-control,
-  .shortener__controls .btn {
-    height: 46px;
-  }
-
-  .shortener__controls .form-control {
-    min-width: 0;
-    padding: 0.625rem 0.875rem;
-    font-size: 1rem;
-  }
-
-    .shortener__controls .form-control::placeholder {
-      color: #6c757d;
-    }
-
-.shortener__submit {
-  display: inline-flex;
-  min-width: 132px;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  padding-right: 1.25rem;
-  padding-left: 1.25rem;
-  font-size: 1rem;
-  font-weight: 500;
-  white-space: nowrap;
+.application {
+  width: 100%;
 }
 
-.shortener__result,
-.shortener__error {
-  margin-top: 1rem;
-  margin-bottom: 0;
-}
-
-.shortener__result-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.shortener__link {
-  min-width: 0;
-  flex: 1;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-.shortener__copy-button {
-  min-width: 76px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-@media (max-width: 575.98px) {
-  .shortener {
-    padding: 1rem 0;
-  }
-
-  .shortener__title {
-    margin-bottom: 0.875rem;
-    font-size: 1.5rem;
-  }
-
-  .shortener__submit {
-    min-width: 104px;
-    padding-right: 0.875rem;
-    padding-left: 0.875rem;
-  }
-
-  .shortener__result {
-    padding: 0.875rem;
-  }
-
-  .shortener__result-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .shortener__copy-button {
-    width: 100%;
-  }
+.application__notice {
+  width: min(100%, 880px);
+  margin: 1rem auto 0;
+  text-align: center;
 }

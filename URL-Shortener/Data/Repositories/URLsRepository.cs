@@ -37,10 +37,16 @@ namespace URL_Shortener.Data.Repositories
             => await _dbContext.URLs.FirstOrDefaultAsync(predicate);
 
         public virtual async Task<List<URL>> FindURLsAsync(int creatorId)
-            => await _dbContext.URLs.Where(u => u.Creator.Id == creatorId).ToListAsync();
+            => await _dbContext.URLs.Where(u => u.Creator.Id == creatorId).OrderByDescending(u=>u.CreationDate).ToListAsync(); // bad stuff
 
         public virtual async Task<List<URL>> FindURLsAsync(Expression<Func<URL, bool>> predicate)
-            => await _dbContext.URLs.Where(predicate).ToListAsync();
+            => await _dbContext.URLs.Where(predicate).OrderByDescending(u => u.CreationDate).ToListAsync();
+
+        public virtual async Task<List<URL>> FindURLsAsync(int pageIndex, int pageSize)
+            => await _dbContext.URLs.AsNoTracking()
+                                    .OrderByDescending(u=>u.CreationDate).ThenByDescending(u=>u.Id)
+                                    .Skip(pageIndex*pageSize).Take(pageSize)
+                                    .ToListAsync();
 
         public virtual async Task<URL?> FirstURLAsync()
             => await _dbContext.URLs.FirstOrDefaultAsync();
@@ -74,5 +80,8 @@ namespace URL_Shortener.Data.Repositories
 
         public virtual async Task<bool> AnyURLAsync(Expression<Func<URL, bool>> predicate)
             => await _dbContext.URLs.AnyAsync(predicate);
+
+        public virtual async Task<int> CountURLsAsync()
+            => await _dbContext.URLs.AsNoTracking().CountAsync();
     }
 }

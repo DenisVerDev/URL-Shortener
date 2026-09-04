@@ -1,0 +1,101 @@
+<section class="shortener"
+         aria-labelledby="shortener-title">
+
+  <h2 id="shortener-title"
+      class="shortener__title">
+
+    Shorten a URL
+  </h2>
+
+  <form class="shortener__form"
+        [formGroup]="form"
+        (ngSubmit)="submit()"
+        novalidate>
+
+    <label for="original-url"
+           class="visually-hidden">
+
+      URL to shorten
+    </label>
+
+    <div class="input-group shortener__controls">
+      <input id="original-url"
+             type="url"
+             class="form-control"
+             placeholder="Enter a long URL"
+             autocomplete="url"
+             formControlName="url">
+
+      <button type="submit"
+              class="btn btn-primary shortener__submit"
+              [disabled]="form.invalid || isSubmitting()">
+
+        @if (isSubmitting()) {
+        <span class="spinner-border spinner-border-sm"
+              aria-hidden="true">
+        </span>
+
+        <span class="d-none d-sm-inline">
+          Shortening...
+        </span>
+        } @else {
+        <span class="d-none d-sm-inline">
+          Shorten URL
+        </span>
+
+        <span class="d-sm-none">
+          Shorten
+        </span>
+        }
+      </button>
+    </div>
+
+    @if (
+    urlControl.touched &&
+    urlControl.hasError('required')
+    ) {
+    <div class="text-danger small mt-1">
+      Enter a URL to shorten.
+    </div>
+    }
+  </form>
+
+  @if (shortenedUrl(); as url) {
+  <div class="alert alert-success shortener__result"
+       role="status">
+
+    <p class="mb-2">
+      The URL was shortened successfully.
+    </p>
+
+    <div class="shortener__result-row">
+      <a class="shortener__link"
+         [href]="url"
+         target="_blank"
+         rel="noopener noreferrer">
+
+        {{ url }}
+      </a>
+
+      <button type="button"
+              class="btn btn-outline-success shortener__copy-button"
+              (click)="copyShortenedUrl()">
+
+        @if (isCopied()) {
+        Copied!
+        } @else {
+        Copy
+        }
+      </button>
+    </div>
+  </div>
+  }
+
+  @if (errorMessage()) {
+  <div class="alert alert-danger shortener__error"
+       role="alert">
+
+    {{ errorMessage() }}
+  </div>
+  }
+</section>

@@ -5,12 +5,13 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using URL_Shortener.Data.Repositories;
 using URL_Shortener.Models;
+using URL_Shortener.Models.DTO;
 using URL_Shortener.Models.Forms;
 using URL_Shortener.Services;
 
 namespace URL_Shortener.Controllers
 {
-    public class HomeController (IURLsRepository _urlR, IURLsManagementService _ums) : Controller
+    public class HomeController (IURLsRepository _urlR, IURLsManagementService _ums, IURLsViewingService _uvs) : Controller
     {
         public IActionResult Index()
         {
@@ -21,7 +22,40 @@ namespace URL_Shortener.Controllers
         public async Task<IActionResult> RedirectToOriginalURL(string shortUrlId)
         {
             var url = await _urlR.FirstURLAsync(u=>u.ShortURLId == shortUrlId);
-            return url is null ? View() : Redirect(url.OriginalURL);
+            return url is null ? NotFound() : Redirect(url.OriginalURL);
+        }
+
+        [HttpGet("/urls")]
+        public async Task<IActionResult> PaginateURLs([FromQuery] UrlsFilterFormModel model)
+        {
+            if (!ModelState.IsValid)
+                return ValidationProblem(ModelState);
+
+            int totalCount = await _urlR.CountURLsAsync();
+
+            var result = await _uvs.ViewURLsAsync(model.PageIndex, model.PageSize);
+
+            bool parseUserIdResult = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int userId);
+            bool paresUserRoleResult = int.TryParse(User.FindFirstValue(ClaimTypes.Role), out int roleId);
+
+            var urlDtos = result.URLs?.Select(u => new UrlDTO
+            {
+                Id = u.Id,
+                IsUserAuthority = User.Identity.IsAuthenticated && parseUserIdResult && paresUserRoleResult ? 
+                                  userId == u.CreatorId || roleId == 2 : false, // 2 means admin
+                OriginalURL = u.OriginalURL,
+                ShortURLId = u.ShortURLId
+            }).ToList() ?? [];
+
+            var response = new PageUrlsDTO
+            {
+                Items = urlDtos,
+                PageIndex = model.PageIndex,
+                PageSize = model.PageSize,
+                TotalCount = totalCount
+            };
+
+            return Ok(response);
         }
 
         public IActionResult Privacy()
@@ -61,6 +95,40 @@ namespace URL_Shortener.Controllers
                 default:
                     return Ok(result.URL!.ShortURLId);
             }
+        }
+
+        [Authorize(Roles = "1")]
+        [HttpDelete("/delete/personal/{id}")]
+        public async Task<IActionResult> DeletePersonalURL(int id)
+        {
+            var url = await _urlR.FindURLAsync(id);
+
+            if (url is null)
+                return NotFound();
+
+            if(!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int userId))
+                return BadRequest();
+
+            if (userId != url.CreatorId)
+                return Forbid();
+
+            var result = await _ums.DeleteURLAsync(url);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "2")]
+        [HttpDelete("/delete/{id}")]
+        public async Task<IActionResult> DeleteURL(int id)
+        {
+            var url = await _urlR.FindURLAsync(id);
+
+            if(url is null)
+                return NotFound();
+
+            var result  = await _ums.DeleteURLAsync(url);
+
+            return Ok(result);
         }
     }
 }
