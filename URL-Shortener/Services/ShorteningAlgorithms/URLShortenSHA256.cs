@@ -19,7 +19,7 @@ namespace URL_Shortener.Services.ShorteningAlgorithms
             {
                 string shortUrlId = hashBase62.Substring(i, 5);
 
-                if (await _urlR.AnyURLAsync(u => u.ShortURLId == hashBase62))
+                if (await _urlR.AnyURLAsync(u => u.ShortURLId == shortUrlId))
                     continue;
 
                 return shortUrlId;
