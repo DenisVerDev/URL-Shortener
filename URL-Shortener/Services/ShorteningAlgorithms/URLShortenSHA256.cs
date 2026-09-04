@@ -29,7 +29,7 @@ namespace URL_Shortener.Services.ShorteningAlgorithms
 
         public string HashURL(string url)
         {
-            var data = Encoding.UTF8.GetBytes(url);
+            var data = Encoding.ASCII.GetBytes(url);
             var sha256 = SHA256.HashData(data);
             
             return Convert.ToHexStringLower(sha256);
@@ -37,7 +37,7 @@ namespace URL_Shortener.Services.ShorteningAlgorithms
 
         private string EncodeHash(string hash)
         {
-            byte[] data = Encoding.UTF8.GetBytes(hash);
+            byte[] data = Encoding.ASCII.GetBytes(hash);
             return Base62.Default.Encode(data);
         }
     }
