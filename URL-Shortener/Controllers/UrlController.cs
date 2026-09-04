@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using URL_Shortener.Data.Repositories;
 using URL_Shortener.Models;
 
 namespace URL_Shortener.Controllers
 {
+    [Authorize]
     public class UrlController (IURLsRepository _urlR, IUsersRepository _ur) : Controller
     {
         public async Task<IActionResult> Index(int id)
