@@ -4,7 +4,7 @@
     {
         public int Id {  get; set; }
 
-        public int CreatorId { get; set; } // will come in hand later
+        public bool IsUserCreator { get; set; } // meaning current user who did the request
 
         public string OriginalURL { get; set; } = null!;
 
