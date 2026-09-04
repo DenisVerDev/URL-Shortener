@@ -42,7 +42,7 @@ namespace URL_Shortener.Controllers
             {
                 Id = u.Id,
                 IsUserAuthority = User.Identity.IsAuthenticated && parseUserIdResult && paresUserRoleResult ? 
-                                  userId == u.Id || roleId == 2 : false, // 2 means admin
+                                  userId == u.CreatorId || roleId == 2 : false, // 2 means admin
                 OriginalURL = u.OriginalURL,
                 ShortURLId = u.ShortURLId
             }).ToList() ?? [];
@@ -97,7 +97,24 @@ namespace URL_Shortener.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = 1)]
+        [HttpDelete("/delete/personal/{id}")]
+        public async Task<IActionResult> DeletePersonalURL(int id)
+        {
+            var url = await _urlR.FindURLAsync(id);
+
+            if (url is null)
+                return NotFound();
+
+            if (int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int userId) && userId != url.CreatorId)
+                return Forbid();
+
+            var result = await _ums.DeleteURLAsync(url);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = 2)]
         [HttpDelete("/delete/{id}")]
         public async Task<IActionResult> DeleteURL(int id)
         {
