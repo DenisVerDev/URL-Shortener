@@ -74,16 +74,23 @@
   word-break: break-word;
 }
 
+/*
+ * The whole group is centered.
+ *
+ * If only View exists, it is centered by itself.
+ * If both buttons exist, the pair is centered.
+ */
 .urls-table__actions {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 0.4rem;
 }
 
 .urls-table__action-button {
   display: inline-flex;
-  min-width: 64px;
+  width: 64px;
+  flex: 0 0 64px;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
@@ -142,7 +149,7 @@
   }
 
   .urls-table__actions-column {
-    width: 78px;
+    width: 140px;
   }
 
   .urls-table thead th,
@@ -152,15 +159,14 @@
   }
 
   .urls-table__actions {
-    flex-direction: column;
-    align-items: stretch;
+    gap: 0.3rem;
   }
 
   .urls-table__action-button {
-    width: 100%;
-    min-width: 0;
-    padding-right: 0.35rem;
-    padding-left: 0.35rem;
+    width: 58px;
+    flex-basis: 58px;
+    padding-right: 0.3rem;
+    padding-left: 0.3rem;
   }
 
   .urls-panel__pagination {

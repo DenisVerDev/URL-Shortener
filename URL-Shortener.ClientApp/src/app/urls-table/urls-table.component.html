@@ -82,7 +82,7 @@
 
           @if (isAuthenticated()) {
           <th scope="col"
-              class="text-end">
+              class="text-center">
 
             Actions
           </th>
@@ -118,15 +118,9 @@
           @if (isAuthenticated()) {
           <td>
             <div class="urls-table__actions">
-              <a class="btn btn-outline-primary btn-sm urls-table__action-button"
-                 [href]="detailsUrl(url.id)">
-
-                View
-              </a>
-
               @if (url.isUserAuthority) {
               <button type="button"
-                      class="btn btn-outline-danger btn-sm urls-table__action-button"
+                      class="btn btn-outline-danger btn-sm urls-table__action-button urls-table__delete-button"
                       [disabled]="deletingUrlId() !== null"
                       (click)="deleteUrl(url)">
 
@@ -135,7 +129,7 @@
                       aria-hidden="true">
                 </span>
 
-                <span class="d-none d-lg-inline">
+                <span class="visually-hidden">
                   Deleting...
                 </span>
                 } @else {
@@ -143,6 +137,12 @@
                 }
               </button>
               }
+
+              <a class="btn btn-outline-primary btn-sm urls-table__action-button urls-table__view-button"
+                 [href]="detailsUrl(url.id)">
+
+                View
+              </a>
             </div>
           </td>
           }
