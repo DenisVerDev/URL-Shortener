@@ -42,6 +42,7 @@ namespace URL_Shortener.Controllers
                     urlDtos.Add(new UrlDTO
                     {
                         Id = url.Id,
+                        CreatorId = url.CreatorId,
                         OriginalURL = url.OriginalURL,
                         ShortURLId = url.ShortURLId
                     });

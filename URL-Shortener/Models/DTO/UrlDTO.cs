@@ -4,8 +4,10 @@
     {
         public int Id {  get; set; }
 
-        public string OriginalURL { get; set; }
+        public int CreatorId { get; set; } // will come in hand later
 
-        public string ShortURLId { get; set; }
+        public string OriginalURL { get; set; } = null!;
+
+        public string ShortURLId { get; set; } = null!;
     }
 }
