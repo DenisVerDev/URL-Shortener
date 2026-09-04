@@ -10,7 +10,7 @@ using URL_Shortener.Services;
 
 namespace URL_Shortener.Controllers
 {
-    public class HomeController (IURLsRepository _urlR, IURLsManagementService _ums) : Controller
+    public class HomeController (IURLsRepository _urlR, IURLsManagementService _ums, IURLsViewingService _uvs) : Controller
     {
         public IActionResult Index()
         {
@@ -22,6 +22,14 @@ namespace URL_Shortener.Controllers
         {
             var url = await _urlR.FirstURLAsync(u=>u.ShortURLId == shortUrlId);
             return url is null ? View() : Redirect(url.OriginalURL);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PaginateURLs([FromBody] UrlsFilterFormModel model)
+        {
+            var result = await _uvs.ViewURLsAsync(model.PageIndex, model.PageSize);
+            return result.Status == URLsOperationResultCode.Success ? Ok(result.URLs) :
+                                                                      Problem("Problem occured while trying to retreive urls' data.");
         }
 
         public IActionResult Privacy()
