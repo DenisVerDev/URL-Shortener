@@ -12,6 +12,9 @@ namespace URL_Shortener.Services
             if (originalUrl.IsNullOrEmpty())
                 throw new ArgumentException($"{nameof(URLsManagementService)} cannot create new URL with null or empty original url!");
 
+            if(await _urlR.AnyURLAsync(u => u.OriginalURL == originalUrl))
+                return new URLCreationResult(null, URLsOperationResultCode.DuplicateURL);
+
             if (!await _ur.AnyUserAsync(u => u.Id == creatorId))
                 return new URLCreationResult(null, URLsOperationResultCode.AbsentUser);
 
