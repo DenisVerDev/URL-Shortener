@@ -116,26 +116,34 @@
           </td>
 
           @if (isAuthenticated()) {
-          <td class="text-end">
-            @if (url.isUserAuthority) {
-            <button type="button"
-                    class="btn btn-outline-danger btn-sm urls-table__delete-button"
-                    [disabled]="deletingUrlId() !== null"
-                    (click)="deleteUrl(url)">
+          <td>
+            <div class="urls-table__actions">
+              <a class="btn btn-outline-primary btn-sm urls-table__action-button"
+                 [href]="detailsUrl(url.id)">
 
-              @if (deletingUrlId() === url.id) {
-              <span class="spinner-border spinner-border-sm"
-                    aria-hidden="true">
-              </span>
+                View
+              </a>
 
-              <span class="d-none d-md-inline">
-                Deleting...
-              </span>
-              } @else {
-              Delete
+              @if (url.isUserAuthority) {
+              <button type="button"
+                      class="btn btn-outline-danger btn-sm urls-table__action-button"
+                      [disabled]="deletingUrlId() !== null"
+                      (click)="deleteUrl(url)">
+
+                @if (deletingUrlId() === url.id) {
+                <span class="spinner-border spinner-border-sm"
+                      aria-hidden="true">
+                </span>
+
+                <span class="d-none d-lg-inline">
+                  Deleting...
+                </span>
+                } @else {
+                Delete
+                }
+              </button>
               }
-            </button>
-            }
+            </div>
           </td>
           }
         </tr>

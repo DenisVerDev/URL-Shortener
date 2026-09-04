@@ -132,6 +132,10 @@ export class UrlsTableComponent implements OnInit {
     return `${window.location.origin}/short/${shortUrlId}`;
   }
 
+  protected detailsUrl(id: number): string {
+    return `/Url/Index/${id}`;
+  }
+
   protected deleteUrl(url: UrlDto): void {
     if (!url.isUserAuthority) {
       return;
@@ -161,10 +165,6 @@ export class UrlsTableComponent implements OnInit {
       )
       .subscribe({
         next: result => {
-          /*
-           * No special handling for AbsentURL.
-           * The table reloads only for Success.
-           */
           if (
             result !==
             URLsOperationResultCode.Success

@@ -43,15 +43,15 @@
 }
 
 .urls-table--with-actions .urls-table__original-column {
-  width: 56%;
+  width: 53%;
 }
 
 .urls-table--with-actions .urls-table__short-column {
-  width: 34%;
+  width: 32%;
 }
 
 .urls-table__actions-column {
-  width: 110px;
+  width: 175px;
 }
 
 .urls-table thead th {
@@ -74,12 +74,20 @@
   word-break: break-word;
 }
 
-.urls-table__delete-button {
+.urls-table__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.urls-table__action-button {
   display: inline-flex;
-  min-width: 68px;
+  min-width: 64px;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
+  white-space: nowrap;
 }
 
 .urls-panel__message {
@@ -126,27 +134,33 @@
   }
 
   .urls-table--with-actions .urls-table__original-column {
-    width: 48%;
+    width: 43%;
   }
 
   .urls-table--with-actions .urls-table__short-column {
-    width: 32%;
+    width: 31%;
   }
 
   .urls-table__actions-column {
-    width: 82px;
+    width: 78px;
   }
 
   .urls-table thead th,
   .urls-table tbody td {
-    padding: 0.65rem 0.5rem;
+    padding: 0.65rem 0.45rem;
     font-size: 0.875rem;
   }
 
-  .urls-table__delete-button {
-    min-width: 62px;
-    padding-right: 0.4rem;
-    padding-left: 0.4rem;
+  .urls-table__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .urls-table__action-button {
+    width: 100%;
+    min-width: 0;
+    padding-right: 0.35rem;
+    padding-left: 0.35rem;
   }
 
   .urls-panel__pagination {
