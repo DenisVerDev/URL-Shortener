@@ -89,6 +89,9 @@ namespace URL_Shortener.Data
                     .IsRequired()
                     .HasMaxLength(2048);
 
+                entity.HasIndex(x => x.OriginalURL)
+                      .IsUnique();
+
                 entity.ToTable(table =>
                 {
                     table.HasCheckConstraint(

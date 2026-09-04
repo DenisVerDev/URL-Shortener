@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using URL_Shortener.Data;
 using URL_Shortener.Data.Repositories;
 using URL_Shortener.Services;
+using URL_Shortener.Services.ShorteningAlgorithms;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IURLsRepository, URLsRepository>();
+
+builder.Services.AddScoped<IURLShortenAlgorithm, URLShortenSHA256>();
 
 builder.Services.AddScoped<IUserVerificationService, UserVerificationService>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();

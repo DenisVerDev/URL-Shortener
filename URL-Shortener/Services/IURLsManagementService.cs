@@ -27,8 +27,9 @@ namespace URL_Shortener.Services
     public enum URLsOperationResultCode
     {
         Success,
-        AbsentUser,
+        DuplicateURL,
         AbsentURL,
-        AbsentURLs
+        AbsentURLs,
+        AbsentUser
     }
 }
