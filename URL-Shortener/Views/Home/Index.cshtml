@@ -2,19 +2,13 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">
-        Welcome @User.Identity?.Name
-    </h1>
-</div>
-
 @if (User.Identity?.IsAuthenticated == true)
 {
     <app-root></app-root>
 }
 else
 {
-    <div class="alert alert-info mt-4">
+    <div class="alert alert-info text-center mt-2">
         You must log in before shortening URLs.
     </div>
 }

@@ -16,16 +16,15 @@ import { finalize } from 'rxjs';
 import { UrlShortenerService } from './url-shortener.service';
 
 @Component({
+  selector: 'app-root',
   imports: [
     ReactiveFormsModule
   ],
-  selector: 'app-root',
-  styleUrl: './app.css',
-  templateUrl: './app.html'
+  templateUrl: './app.html',
+  styleUrl: './app.css'
 })
 export class App {
-  private readonly urlService = inject(
-    UrlShortenerService);
+  private readonly urlService = inject(UrlShortenerService);
 
   protected readonly form = new FormGroup({
     url: new FormControl('', {
@@ -36,18 +35,17 @@ export class App {
     })
   });
 
-  protected readonly shortUrlId =
-    signal<string | null>(null);
-
+  protected readonly shortUrlId = signal<string | null>(null);
   protected readonly errorMessage = signal('');
-
   protected readonly isSubmitting = signal(false);
+  protected readonly isCopied = signal(false);
 
   protected readonly shortenedUrl = computed(() => {
     const id = this.shortUrlId();
 
-    if (id === null)
+    if (id === null) {
       return null;
+    }
 
     return `${window.location.origin}/${id}`;
   });
@@ -64,6 +62,7 @@ export class App {
 
     this.shortUrlId.set(null);
     this.errorMessage.set('');
+    this.isCopied.set(false);
     this.isSubmitting.set(true);
 
     this.urlService
@@ -73,8 +72,7 @@ export class App {
       )
       .subscribe({
         next: returnedShortUrlId => {
-          this.shortUrlId.set(
-            returnedShortUrlId.trim());
+          this.shortUrlId.set(returnedShortUrlId.trim());
         },
         error: error => {
           this.handleError(error);
@@ -82,13 +80,31 @@ export class App {
       });
   }
 
+  protected async copyShortenedUrl(): Promise<void> {
+    const url = this.shortenedUrl();
+
+    if (url === null) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      this.isCopied.set(true);
+
+      window.setTimeout(() => {
+        this.isCopied.set(false);
+      }, 2000);
+    } catch {
+      this.errorMessage.set(
+        'The shortened URL could not be copied.'
+      );
+    }
+  }
+
   private handleError(error: HttpErrorResponse): void {
     if (error.status === 400) {
-      const responseBody = this.parseErrorBody(
-        error.error);
-
-      const validationErrors =
-        responseBody?.errors;
+      const responseBody = this.parseErrorBody(error.error);
+      const validationErrors = responseBody?.errors;
 
       this.errorMessage.set(
         validationErrors?.URL?.[0] ??
@@ -101,32 +117,37 @@ export class App {
 
     if (error.status === 401) {
       this.errorMessage.set(
-        'You must log in before shortening URLs.');
+        'You must log in before shortening URLs.'
+      );
 
       return;
     }
 
     if (error.status === 403) {
       this.errorMessage.set(
-        'You do not have permission to add URLs.');
+        'You do not have permission to add URLs.'
+      );
 
       return;
     }
 
     if (error.status === 409) {
       this.errorMessage.set(
-        'This URL has already been shortened.');
+        'This URL has already been shortened.'
+      );
 
       return;
     }
 
     this.errorMessage.set(
-      'An unexpected error occurred.');
+      'An unexpected error occurred.'
+    );
   }
 
   private parseErrorBody(body: unknown): any {
-    if (typeof body !== 'string')
+    if (typeof body !== 'string') {
       return body;
+    }
 
     try {
       return JSON.parse(body);
