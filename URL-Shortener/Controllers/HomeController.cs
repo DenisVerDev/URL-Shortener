@@ -106,7 +106,10 @@ namespace URL_Shortener.Controllers
             if (url is null)
                 return NotFound();
 
-            if (int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int userId) && userId != url.CreatorId)
+            if(!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int userId))
+                return BadRequest();
+
+            if (userId != url.CreatorId)
                 return Forbid();
 
             var result = await _ums.DeleteURLAsync(url);

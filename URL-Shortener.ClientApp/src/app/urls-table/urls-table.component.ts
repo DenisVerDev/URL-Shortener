@@ -3,13 +3,20 @@ import {
   Component,
   computed,
   inject,
+  input,
   OnInit,
   signal
 } from '@angular/core';
 import { finalize } from 'rxjs';
 
-import { UrlDto } from './urls-table.models';
-import { UrlsTableService } from './urls-table.service';
+import {
+  UrlDto,
+  URLsOperationResultCode
+} from './urls-table.models';
+
+import {
+  UrlsTableService
+} from './urls-table.service';
 
 @Component({
   selector: 'app-urls-table',
@@ -21,12 +28,20 @@ export class UrlsTableComponent implements OnInit {
   private readonly urlsService =
     inject(UrlsTableService);
 
+  readonly isAuthenticated = input(false);
+  readonly isAdmin = input(false);
+
   protected readonly urls = signal<UrlDto[]>([]);
   protected readonly pageIndex = signal(0);
   protected readonly totalCount = signal(0);
   protected readonly totalPages = signal(0);
   protected readonly isLoading = signal(false);
+
+  protected readonly deletingUrlId =
+    signal<number | null>(null);
+
   protected readonly errorMessage = signal('');
+  protected readonly deletionErrorMessage = signal('');
 
   protected readonly pageSize = 10;
 
@@ -96,7 +111,7 @@ export class UrlsTableComponent implements OnInit {
           this.totalPages.set(response.totalPages);
         },
         error: error => {
-          this.handleError(error);
+          this.handleLoadingError(error);
         }
       });
   }
@@ -117,7 +132,66 @@ export class UrlsTableComponent implements OnInit {
     return `${window.location.origin}/short/${shortUrlId}`;
   }
 
-  private handleError(error: HttpErrorResponse): void {
+  protected deleteUrl(url: UrlDto): void {
+    if (!url.isUserAuthority) {
+      return;
+    }
+
+    if (this.deletingUrlId() !== null) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this shortened URL?'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.deletingUrlId.set(url.id);
+    this.deletionErrorMessage.set('');
+
+    this.urlsService
+      .deleteUrl(url.id, this.isAdmin())
+      .pipe(
+        finalize(() => {
+          this.deletingUrlId.set(null);
+        })
+      )
+      .subscribe({
+        next: result => {
+          /*
+           * No special handling for AbsentURL.
+           * The table reloads only for Success.
+           */
+          if (
+            result !==
+            URLsOperationResultCode.Success
+          ) {
+            return;
+          }
+
+          const shouldOpenPreviousPage =
+            this.urls().length === 1 &&
+            this.pageIndex() > 0;
+
+          const pageToLoad =
+            shouldOpenPreviousPage
+              ? this.pageIndex() - 1
+              : this.pageIndex();
+
+          this.loadPage(pageToLoad);
+        },
+        error: error => {
+          this.handleDeletionRequestError(error);
+        }
+      });
+  }
+
+  private handleLoadingError(
+    error: HttpErrorResponse
+  ): void {
     if (error.status === 400) {
       this.errorMessage.set(
         'The pagination parameters are invalid.');
@@ -127,5 +201,22 @@ export class UrlsTableComponent implements OnInit {
 
     this.errorMessage.set(
       'The URLs could not be loaded. Please try again.');
+  }
+
+  private handleDeletionRequestError(
+    error: HttpErrorResponse
+  ): void {
+    if (
+      error.status === 401 ||
+      error.status === 403
+    ) {
+      this.deletionErrorMessage.set(
+        'You do not have permission to delete this URL.');
+
+      return;
+    }
+
+    this.deletionErrorMessage.set(
+      'The delete request could not be completed.');
   }
 }

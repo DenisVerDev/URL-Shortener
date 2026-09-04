@@ -2,7 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { PagedUrlsDto } from './urls-table.models';
+import {
+  PagedUrlsDto,
+  URLsOperationResultCode
+} from './urls-table.models';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +25,19 @@ export class UrlsTableService {
           pageSize: pageSize.toString()
         }
       }
+    );
+  }
+
+  deleteUrl(
+    id: number,
+    isAdmin: boolean
+  ): Observable<URLsOperationResultCode> {
+    const endpoint = isAdmin
+      ? `/delete/${id}`
+      : `/delete/personal/${id}`;
+
+    return this.http.delete<URLsOperationResultCode>(
+      endpoint
     );
   }
 }

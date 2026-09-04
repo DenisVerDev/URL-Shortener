@@ -33,6 +33,10 @@ export class App {
     this.hostElement.nativeElement
       .dataset['isAuthenticated'] !== 'false';
 
+  protected readonly isAdmin =
+    this.hostElement.nativeElement
+      .dataset['isAdmin'] === 'true';
+
   protected handleUrlShortened(): void {
     this.urlsTable()?.showFirstPage();
   }

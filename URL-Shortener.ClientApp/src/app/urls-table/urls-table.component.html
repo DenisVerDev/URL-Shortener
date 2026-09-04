@@ -15,6 +15,14 @@
     }
   </div>
 
+  @if (deletionErrorMessage()) {
+  <div class="alert alert-danger py-2"
+       role="alert">
+
+    {{ deletionErrorMessage() }}
+  </div>
+  }
+
   @if (isLoading()) {
   <div class="urls-panel__message"
        role="status">
@@ -50,11 +58,16 @@
   </div>
   } @else {
   <div class="table-responsive urls-panel__table-wrapper">
-    <table class="table table-hover align-middle mb-0 urls-table">
+    <table class="table table-hover align-middle mb-0 urls-table"
+           [class.urls-table--with-actions]="isAuthenticated()">
 
       <colgroup>
         <col class="urls-table__original-column">
         <col class="urls-table__short-column">
+
+        @if (isAuthenticated()) {
+        <col class="urls-table__actions-column">
+        }
       </colgroup>
 
       <thead>
@@ -66,6 +79,14 @@
           <th scope="col">
             Shortened URL
           </th>
+
+          @if (isAuthenticated()) {
+          <th scope="col"
+              class="text-end">
+
+            Actions
+          </th>
+          }
         </tr>
       </thead>
 
@@ -93,6 +114,30 @@
               {{ shortenedUrl(url.shortURLId) }}
             </a>
           </td>
+
+          @if (isAuthenticated()) {
+          <td class="text-end">
+            @if (url.isUserAuthority) {
+            <button type="button"
+                    class="btn btn-outline-danger btn-sm urls-table__delete-button"
+                    [disabled]="deletingUrlId() !== null"
+                    (click)="deleteUrl(url)">
+
+              @if (deletingUrlId() === url.id) {
+              <span class="spinner-border spinner-border-sm"
+                    aria-hidden="true">
+              </span>
+
+              <span class="d-none d-md-inline">
+                Deleting...
+              </span>
+              } @else {
+              Delete
+              }
+            </button>
+            }
+          </td>
+          }
         </tr>
         }
       </tbody>
