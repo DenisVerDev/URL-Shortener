@@ -80,5 +80,8 @@ namespace URL_Shortener.Data.Repositories
 
         public virtual async Task<bool> AnyURLAsync(Expression<Func<URL, bool>> predicate)
             => await _dbContext.URLs.AnyAsync(predicate);
+
+        public virtual async Task<int> CountURLsAsync()
+            => await _dbContext.URLs.AsNoTracking().CountAsync();
     }
 }

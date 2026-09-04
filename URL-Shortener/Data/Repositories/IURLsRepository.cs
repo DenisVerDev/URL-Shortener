@@ -36,5 +36,7 @@ namespace URL_Shortener.Data.Repositories
         Task DeleteURLsAsync(IEnumerable<URL> urls);
 
         Task<bool> AnyURLAsync(Expression<Func<URL, bool>> predicate);
+
+        Task<int> CountURLsAsync();
     }
 }

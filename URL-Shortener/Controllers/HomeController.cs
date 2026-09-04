@@ -31,25 +31,27 @@ namespace URL_Shortener.Controllers
             if (!ModelState.IsValid)
                 return ValidationProblem(ModelState);
 
+            int totalCount = await _urlR.CountURLsAsync();
+
             var result = await _uvs.ViewURLsAsync(model.PageIndex, model.PageSize);
 
-            var urlDtos = new List<UrlDTO>();
-
-            if(result.URLs != null && result.URLs.Count > 0)
+            var urlDtos = result.URLs?.Select(u => new UrlDTO
             {
-                foreach (var url in result.URLs)
-                {
-                    urlDtos.Add(new UrlDTO
-                    {
-                        Id = url.Id,
-                        CreatorId = url.CreatorId,
-                        OriginalURL = url.OriginalURL,
-                        ShortURLId = url.ShortURLId
-                    });
-                }
-            }
+                Id = u.Id,
+                CreatorId = u.CreatorId,
+                OriginalURL = u.OriginalURL,
+                ShortURLId = u.ShortURLId
+            }).ToList() ?? [];
 
-            return Ok(urlDtos);
+            var response = new PageUrlsDTO
+            {
+                Items = urlDtos,
+                PageIndex = model.PageIndex,
+                PageSize = model.PageSize,
+                TotalCount = totalCount
+            };
+
+            return Ok(response);
         }
 
         public IActionResult Privacy()
