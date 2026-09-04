@@ -29,8 +29,8 @@ namespace URL_Shortener.Controllers
         }
 
         [Authorize]
-        [HttpPost("short")]
-        public async Task<IActionResult> ShortenURL(ShortenUrlFormModel model)
+        [HttpPost("/short")]
+        public async Task<IActionResult> ShortenURL([FromBody] ShortenUrlFormModel model)
         {
             if (!ModelState.IsValid)
                 return ValidationProblem(ModelState);
@@ -48,15 +48,11 @@ namespace URL_Shortener.Controllers
                     return Forbid();
 
                 case URLsOperationResultCode.DuplicateURL:
-                    var url = await _urlR.FindURLAsync(model.URL);
-                    return Conflict(new
-                    {
-                        message = "This url was already shortened.",
-                        url
-                    });
+                    var url =  await _urlR.FindURLAsync(model.URL);
+                    return url is null ? Problem("Problem occured while searching for the existing url.") : Ok(url.ShortURLId);
 
                 default:
-                    return Ok(result.URL);
+                    return Ok(result.URL!.ShortURLId);
             }
         }
     }

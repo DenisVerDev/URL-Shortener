@@ -1,0 +1,9 @@
+:host {
+  display: block;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.alert a {
+  overflow-wrap: anywhere;
+}
