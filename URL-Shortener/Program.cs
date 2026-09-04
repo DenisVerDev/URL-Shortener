@@ -25,17 +25,18 @@ builder.Services.AddScoped<IURLsViewingService, URLsViewingService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt =>
                 {
-                    opt.LoginPath = "/Login";
-                    opt.LogoutPath = "/Logout";
-                    opt.AccessDeniedPath = "/";
-                    
-                    opt.SlidingExpiration = true;
-                    opt.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                    opt.LoginPath = builder.Configuration["Cookies:AuthCookie:LoginPath"];
+                    opt.LogoutPath = builder.Configuration["Cookies:AuthCookie:LogoutPath"];
+                    opt.AccessDeniedPath = builder.Configuration["Cookies:AuthCookie:AccessDeniedPath"];
 
-                    opt.Cookie.Name = "UrlShortenerAuthCookie";
-                    opt.Cookie.SameSite = SameSiteMode.Lax; // for now
-                    opt.Cookie.HttpOnly = true;
-                    opt.Cookie.IsEssential = true;
+                    opt.SlidingExpiration = builder.Configuration.GetValue<bool>("Cookies:AuthCookie:SlidingExpiration");
+                    opt.ExpireTimeSpan = TimeSpan.FromMinutes(builder.Configuration
+                                                  .GetValue<int>("Cookies:AuthCookie:ExpireTimeSpanInMinutes"));
+
+                    opt.Cookie.Name = builder.Configuration["Cookies:AuthCookie:BrowserName"];
+                    opt.Cookie.SameSite = builder.Configuration.GetValue<SameSiteMode>("Cookies:AuthCookie:SameSite");
+                    opt.Cookie.HttpOnly = builder.Configuration.GetValue<bool>("Cookies:AuthCookie:HttpOnly");
+                    opt.Cookie.IsEssential = builder.Configuration.GetValue<bool>("Cookies:AuthCookie:IsEssential");
                 });
 
 var app = builder.Build();
