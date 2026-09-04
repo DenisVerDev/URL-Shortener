@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using URL_Shortener.Data;
 using URL_Shortener.Data.Repositories;
 using URL_Shortener.Services;
+using URL_Shortener.Services.ShorteningAlgorithms;
 
 var builder = WebApplication.CreateBuilder(args);
 

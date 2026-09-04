@@ -1,4 +1,4 @@
-﻿namespace URL_Shortener.Services
+﻿namespace URL_Shortener.Services.ShorteningAlgorithms
 {
     public interface IURLShortenAlgorithm
     {

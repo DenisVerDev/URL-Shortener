@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using URL_Shortener.Data.Repositories;
 
-namespace URL_Shortener.Services
+namespace URL_Shortener.Services.ShorteningAlgorithms
 {
     public class URLShortenSHA256 (IURLsRepository _urlR) : IURLShortenAlgorithm
     {

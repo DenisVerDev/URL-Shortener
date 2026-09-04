@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using URL_Shortener.Data.Models;
 using URL_Shortener.Data.Repositories;
+using URL_Shortener.Services.ShorteningAlgorithms;
 
 namespace URL_Shortener.Services
 {
