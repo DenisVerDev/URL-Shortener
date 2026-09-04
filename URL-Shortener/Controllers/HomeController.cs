@@ -92,5 +92,19 @@ namespace URL_Shortener.Controllers
                     return Ok(result.URL!.ShortURLId);
             }
         }
+
+        [Authorize]
+        [HttpDelete("/delete/{id}")]
+        public async Task<IActionResult> DeleteURL(int id)
+        {
+            var url = await _urlR.FindURLAsync(id);
+
+            if(url is null)
+                return NotFound();
+
+            var result  = await _ums.DeleteURLAsync(url);
+
+            return Ok(result);
+        }
     }
 }
