@@ -1,7 +1,8 @@
 import {
   Component,
   ElementRef,
-  inject
+  inject,
+  viewChild
 } from '@angular/core';
 
 import {
@@ -25,13 +26,14 @@ export class App {
   private readonly hostElement =
     inject(ElementRef<HTMLElement>);
 
-  /*
-   * When Angular is run separately through ng serve,
-   * the attribute is absent and the form remains visible.
-   *
-   * The MVC view always supplies either "true" or "false".
-   */
+  private readonly urlsTable =
+    viewChild(UrlsTableComponent);
+
   protected readonly isAuthenticated =
     this.hostElement.nativeElement
       .dataset['isAuthenticated'] !== 'false';
+
+  protected handleUrlShortened(): void {
+    this.urlsTable()?.showFirstPage();
+  }
 }

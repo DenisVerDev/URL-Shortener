@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   inject,
+  output,
   signal
 } from '@angular/core';
 import {
@@ -29,6 +30,12 @@ import {
 export class UrlShortenerComponent {
   private readonly urlService =
     inject(UrlShortenerService);
+
+  /*
+   * The parent component can listen to this event.
+   * It fires after the backend successfully shortens a URL.
+   */
+  readonly urlShortened = output<void>();
 
   protected readonly form = new FormGroup({
     url: new FormControl('', {
@@ -80,6 +87,11 @@ export class UrlShortenerComponent {
         next: returnedShortUrlId => {
           this.shortUrlId.set(
             returnedShortUrlId.trim());
+
+          /*
+           * Inform App that the table should reload.
+           */
+          this.urlShortened.emit();
         },
         error: error => {
           this.handleError(error);
