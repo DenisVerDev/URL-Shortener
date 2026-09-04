@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using URL_Shortener.Data.Repositories;
 using URL_Shortener.Models;
+using URL_Shortener.Models.DTO;
 using URL_Shortener.Models.Forms;
 using URL_Shortener.Services;
 
@@ -21,15 +22,33 @@ namespace URL_Shortener.Controllers
         public async Task<IActionResult> RedirectToOriginalURL(string shortUrlId)
         {
             var url = await _urlR.FirstURLAsync(u=>u.ShortURLId == shortUrlId);
-            return url is null ? View() : Redirect(url.OriginalURL);
+            return url is null ? NotFound() : Redirect(url.OriginalURL);
         }
 
-        [HttpPost]
+        [HttpGet("/urls")]
         public async Task<IActionResult> PaginateURLs([FromBody] UrlsFilterFormModel model)
         {
+            if (!ModelState.IsValid)
+                return ValidationProblem(ModelState);
+
             var result = await _uvs.ViewURLsAsync(model.PageIndex, model.PageSize);
-            return result.Status == URLsOperationResultCode.Success ? Ok(result.URLs) :
-                                                                      Problem("Problem occured while trying to retreive urls' data.");
+
+            var urlDtos = new List<UrlDTO>();
+
+            if(result.URLs != null && result.URLs.Count > 0)
+            {
+                foreach (var url in result.URLs)
+                {
+                    urlDtos.Add(new UrlDTO
+                    {
+                        Id = url.Id,
+                        OriginalURL = url.OriginalURL,
+                        ShortURLId = url.ShortURLId
+                    });
+                }
+            }
+
+            return Ok(urlDtos);
         }
 
         public IActionResult Privacy()

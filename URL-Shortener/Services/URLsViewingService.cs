@@ -20,9 +20,7 @@ namespace URL_Shortener.Services
         public async Task<URLsViewingResult> ViewURLsAsync(int pageIndex, int pageSize)
         {
             var urls = await _urlsR.FindURLsAsync(pageIndex, pageSize);
-
-            return urls.IsNullOrEmpty() ? new URLsViewingResult(null, URLsOperationResultCode.AbsentURLs) :
-                                          new URLsViewingResult(urls, URLsOperationResultCode.Success);
+            return new URLsViewingResult(urls, URLsOperationResultCode.Success);
         }
     }
 }

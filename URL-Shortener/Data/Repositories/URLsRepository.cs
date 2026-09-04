@@ -43,7 +43,10 @@ namespace URL_Shortener.Data.Repositories
             => await _dbContext.URLs.Where(predicate).OrderByDescending(u => u.CreationDate).ToListAsync();
 
         public virtual async Task<List<URL>> FindURLsAsync(int pageIndex, int pageSize)
-            => await _dbContext.URLs.Skip(pageIndex).Take(pageSize).OrderByDescending(u=>u.CreationDate).ToListAsync();
+            => await _dbContext.URLs.AsNoTracking()
+                                    .OrderByDescending(u=>u.CreationDate).ThenByDescending(u=>u.Id)
+                                    .Skip(pageIndex*pageSize).Take(pageSize)
+                                    .ToListAsync();
 
         public virtual async Task<URL?> FirstURLAsync()
             => await _dbContext.URLs.FirstOrDefaultAsync();
