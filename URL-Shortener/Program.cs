@@ -16,9 +16,10 @@ builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IURLsRepository, URLsRepository>();
 
 builder.Services.AddScoped<IUserVerificationService, UserVerificationService>();
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 builder.Services.AddScoped<IURLsManagementService, URLsManagementService>();
 builder.Services.AddScoped<IURLsViewingService, URLsViewingService>();
-builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 
 var app = builder.Build();
 

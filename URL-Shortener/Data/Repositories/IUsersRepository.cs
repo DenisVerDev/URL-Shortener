@@ -5,6 +5,10 @@ namespace URL_Shortener.Data.Repositories
 {
     public interface IUsersRepository
     {
+        Task<User?> AddUserAsync(User user);
+
+        Task<User?> CreateUserAsync(string login, string password);
+
         Task<User?> FindUserAsync(int id);
 
         Task<User?> FindUserAsync(string login);

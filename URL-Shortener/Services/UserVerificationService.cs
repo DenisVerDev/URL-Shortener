@@ -14,12 +14,12 @@ namespace URL_Shortener.Services
             var user = await _ur.FindUserAsync(login);
 
             if (user is null)
-                return new UserVerificationResult(null, UserVerificationResultCode.AbsentUser);
+                return new UserVerificationResult(null, UserOperationResultCode.AbsentUser);
 
             if (!bc.Verify(password, user.PasswordHash))
-                return new UserVerificationResult(null, UserVerificationResultCode.VerificationFailure);
+                return new UserVerificationResult(null, UserOperationResultCode.VerificationFailure);
 
-            return new UserVerificationResult(user, UserVerificationResultCode.Success);
+            return new UserVerificationResult(user, UserOperationResultCode.Success);
         }
     }
 }
