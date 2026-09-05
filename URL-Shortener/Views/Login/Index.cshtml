@@ -1,18 +1,49 @@
-﻿@{
-    ViewData["Title"] = "Login";
-}
-@model LoginFormModel
+﻿@model LoginFormModel
 
-<form method="post">
-    <div>
-        <input asp-for="Login" type="text" placeholder="Login"/>
-        <span asp-validation-for="Login"></span>
+@{
+    ViewData["Title"] = "Sign In";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-12 col-sm-10 col-md-7 col-lg-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h1 class="h3 mb-2"> Sign In</h1>
+                    <p class="text-body-secondary mb-0">
+                        Sign in to shorten and manage your URLs.
+                    </p>
+                </div>
+
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+                    </div>
+
+                    <div class="mb-3">
+                        @* <label asp-for="Login"  class="form-label">Login</label> *@
+                        <input asp-for="Login" class="form-control" type="text" placeholder="Enter your login"/>
+                        <span asp-validation-for="Login" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        @* <label asp-for="Password" class="form-label">Password</label> *@
+                        <input asp-for="Password" class="form-control" type="password" placeholder="Enter your password"/>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <button class="btn btn-primary w-100" type="submit">Sign In</button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <span class="text-body-secondary"> Don’t have an account?</span>
+                    <a asp-controller="Login" asp-action="Register">Register</a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <input asp-for="Password" type="password" placeholder="Password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <div>
-        <button type="submit">Sign in</button>
-    </div>
-</form>
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
