@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+
+    bool isAuthenticated =
+        User.Identity?.IsAuthenticated == true;
+
+    bool isAdmin =
+        User.IsInRole("2");
+}
+
+<app-root data-is-authenticated="@isAuthenticated.ToString().ToLowerInvariant()"
+          data-is-admin="@isAdmin.ToString().ToLowerInvariant()">
+</app-root>
+
+@section Scripts
+{
+    <script type="module"
+            src="~/angular/browser/main.js"
+            asp-append-version="true">
+    </script>
+}

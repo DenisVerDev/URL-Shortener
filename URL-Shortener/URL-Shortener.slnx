@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="../URL-Shortener.ClientApp/URL-Shortener.ClientApp.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="../URL-Shortener.Tests/URL-Shortener.Tests.csproj" Id="089854b6-440a-40d0-a85b-b118069d777b" />
+  <Project Path="URL-Shortener.csproj" />
+</Solution>

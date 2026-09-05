@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.application {
+  width: 100%;
+}
+
+.application__notice {
+  width: min(100%, 880px);
+  margin: 1rem auto 0;
+  text-align: center;
+}
