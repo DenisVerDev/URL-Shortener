@@ -26,6 +26,8 @@ builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 builder.Services.AddScoped<IURLsManagementService, URLsManagementService>();
 builder.Services.AddScoped<IURLsViewingService, URLsViewingService>();
+builder.Services.AddScoped<IPostsViewingService, PostsViewingService>();
+builder.Services.AddScoped<IPostsManagementService, PostsManagementService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt =>
