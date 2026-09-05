@@ -10,6 +10,9 @@ namespace URL_Shortener.Services
     {
         public async Task CreateCookieSessionAsync(User user)
         {
+            if(user is null)
+                throw new ArgumentNullException($"{nameof(UserSessionService)} cannot creake auth cookie with null user!");
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
