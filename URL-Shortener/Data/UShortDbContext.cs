@@ -8,6 +8,7 @@ namespace URL_Shortener.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<URL> URLs { get; set; }
+        public DbSet<Post> Posts { get; set; }
 
         public UShortDbContext(DbContextOptions<UShortDbContext> options) : base(options)
         {}
@@ -19,6 +20,7 @@ namespace URL_Shortener.Data
             ConfigureRoles(modelBuilder);
             ConfigureUsers(modelBuilder);
             ConfigureURLs(modelBuilder);
+            ConfigurePosts(modelBuilder);
         }
 
         private static void ConfigureRoles(ModelBuilder modelBuilder)
@@ -117,6 +119,17 @@ namespace URL_Shortener.Data
                     .WithMany(x => x.URLs)
                     .HasForeignKey(x => x.CreatorId)
                     .IsRequired();
+            });
+        }
+
+        public static void ConfigurePosts(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.Content)
+                      .IsRequired();
             });
         }
     }
