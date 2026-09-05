@@ -1,0 +1,52 @@
+﻿@model UrlViewModel
+
+@{
+    ViewData["Title"] = "URL Details";
+
+    string shortenedUrl =
+        $"{Context.Request.Scheme}://{Context.Request.Host}/short/{Model.ShortURLId}";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-12 col-lg-9">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h1 class="h4 mb-0">URL Details</h1>
+            </div>
+
+            <div class="card-body p-4">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3 mb-2">Original URL</dt>
+
+                    <dd class="col-sm-9 mb-4">
+                        <a class="text-break" href="@Model.OriginalURL" target="_blank" rel="noopener noreferrer">
+                            @Model.OriginalURL
+                        </a>
+                    </dd>
+
+                    <dt class="col-sm-3 mb-2">Shortened URL</dt>
+
+                    <dd class="col-sm-9 mb-4">
+                        <a class="text-break" href="@shortenedUrl" target="_blank" rel="noopener noreferrer">
+                            @shortenedUrl
+                        </a>
+                    </dd>
+
+                    <dt class="col-sm-3 mb-2">Creator</dt>
+
+                    <dd class="col-sm-9 mb-4">@Model.Creator</dd>
+
+                    <dt class="col-sm-3 mb-2">Created</dt>
+
+                    <dd class="col-sm-9 mb-0">
+                        @Model.CreationDate.ToUniversalTime().ToString("dd MMMM yyyy, HH:mm 'UTC'")
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="card-footer bg-white py-3">
+                <a class="btn btn-outline-secondary"  asp-controller="Home" asp-action="Index">Back to URLs</a>
+            </div>
+        </div>
+    </div>
+</div>
