@@ -16,6 +16,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IURLsRepository, URLsRepository>();
+builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 
 builder.Services.AddScoped<IURLShortenAlgorithm, URLShortenSHA256>();
 
