@@ -1,32 +1,77 @@
-﻿@{
+﻿@model AboutViewModel
+
+@{
     ViewData["Title"] = "About";
 }
-@model AboutViewModel
 
-<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+<div class="row justify-content-center mt-4">
+    <div class="col-12 col-lg-10">
+        <h1 class="h3 mb-3">
+            About
+        </h1>
 
-@if(!Model.IsAdmin)
+        @if (!Model.IsAdmin)
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    @if (string.IsNullOrWhiteSpace(Model.Content))
+                    {
+                        <p class="text-body-secondary mb-0">
+                            No information has been added yet.
+                        </p>
+                    }
+                    else
+                    {
+                        <div class="text-break">
+                            @Html.Raw(Model.Content)
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <link rel="stylesheet"
+                  href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" />
+
+            <div id="editor">
+                @Html.Raw(Model.Content)
+            </div>
+
+            <div class="d-flex justify-content-end align-items-center gap-3 mt-3">
+                <span id="update-post-status"
+                      class="small"
+                      role="status"
+                      aria-live="polite">
+                </span>
+
+                <button id="update-post-button"
+                        type="button"
+                        class="btn btn-primary">
+
+                    <span id="update-post-spinner"
+                          class="spinner-border spinner-border-sm d-none"
+                          aria-hidden="true">
+                    </span>
+
+                    <span id="update-post-button-text">
+                        Update post
+                    </span>
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts
 {
-    @Html.Raw(Model.Content)
-}
-else
-{
-     <!-- Create the editor container -->
-    <div id="editor">
-      <p>Hello World!</p>
-      <p>Some initial <strong>bold</strong> text</p>
-      <p><br /></p>
-    </div>   
-}
+    @if (Model.IsAdmin)
+    {
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js">
+        </script>
 
-@section Scripts{
-     <!-- Include the Quill library -->
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-
-    <!-- Initialize Quill editor -->
-    <script>
-      const quill = new Quill('#editor', {
-        theme: 'snow'
-      });
-    </script>
+        <script src="~/js/about.js"
+                asp-append-version="true">
+        </script>
+    }
 }

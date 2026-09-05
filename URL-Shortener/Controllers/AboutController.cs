@@ -7,7 +7,7 @@ using URL_Shortener.Models;
 
 namespace URL_Shortener.Controllers
 {
-    public class AboutController (IPostsRepository _pr) : Controller
+    public class AboutController(IPostsRepository _pr) : Controller
     {
         public async Task<IActionResult> Index()
         {
