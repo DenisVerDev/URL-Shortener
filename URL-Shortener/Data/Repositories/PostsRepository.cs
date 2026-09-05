@@ -7,5 +7,11 @@ namespace URL_Shortener.Data.Repositories
     {
         public virtual async Task<Post?> FindAboutPostAsync()
             => await _dbContext.Posts.FirstOrDefaultAsync();
+
+        public async Task UpdatePostAsync(Post post)
+        {
+            _dbContext.Posts.Update(post);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

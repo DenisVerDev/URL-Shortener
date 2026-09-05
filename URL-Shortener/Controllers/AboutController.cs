@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using URL_Shortener.Data.Repositories;
 using URL_Shortener.Models;
@@ -18,6 +20,25 @@ namespace URL_Shortener.Controllers
             };
 
             return View(model);
+        }
+
+        [Authorize(Roles = "2")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateAboutPost(string content)
+        {
+            if (content.IsNullOrEmpty())
+                return BadRequest();
+
+            var aboutPost = await _pr.FindAboutPostAsync();
+
+            if (aboutPost is null)
+                return NotFound();
+
+            aboutPost.Content = content;
+
+            await _pr.UpdatePostAsync(aboutPost);
+
+            return Ok();
         }
     }
 }
