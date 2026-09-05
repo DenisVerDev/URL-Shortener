@@ -22,7 +22,23 @@ namespace URL_Shortener.Controllers
         public async Task<IActionResult> RedirectToOriginalURL(string shortUrlId)
         {
             var viewResult = await _uvs.ViewShortURLAsync(shortUrlId);
-            return viewResult.Status == URLsOperationResultCode.AbsentURL ? NotFound() : Redirect(viewResult.URL!.OriginalURL);
+
+            if (viewResult.Status == URLsOperationResultCode.AbsentURL)
+                return NotFound();
+
+            if (!Uri.TryCreate(viewResult.URL!.OriginalURL,UriKind.Absolute, out var uri) ||
+                (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            {
+                return BadRequest("The stored URL is invalid.");
+            }
+
+            // Converts an international domain to Punycode.
+            var uriBuilder = new UriBuilder(uri){Host = uri.IdnHost};
+
+            // Percent-encodes non-ASCII path/query characters.
+            var redirectUrl = uriBuilder.Uri.GetComponents(UriComponents.AbsoluteUri, UriFormat.UriEscaped);
+
+            return Redirect(redirectUrl);
         }
 
         [HttpGet("/urls")]
