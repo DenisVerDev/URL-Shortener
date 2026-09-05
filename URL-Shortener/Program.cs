@@ -21,6 +21,7 @@ builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IURLShortenAlgorithm, URLShortenSHA256>();
 
 builder.Services.AddScoped<IUserVerificationService, UserVerificationService>();
+builder.Services.AddScoped<IUsersViewingService, UsersViewingService>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 builder.Services.AddScoped<IURLsManagementService, URLsManagementService>();

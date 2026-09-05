@@ -9,29 +9,27 @@ using URL_Shortener.Services;
 
 namespace URL_Shortener.Controllers
 {
-    // Move repository logic into service layer
-
     [Authorize]
-    public class UrlController (IUsersRepository _ur, IURLsManagementService _ums, IURLsViewingService _uvs) : Controller
+    public class UrlController (IUsersViewingService _uvs, IURLsManagementService _ums, IURLsViewingService _urlVs) : Controller
     {
         public async Task<IActionResult> Index(int id)
         {
-            var result = await _uvs.ViewURLAsync(id);
+            var urlViewResult = await _urlVs.ViewURLAsync(id);
 
-            if(result.Status == URLsOperationResultCode.AbsentURL)
+            if(urlViewResult.Status == URLsOperationResultCode.AbsentURL)
                 return NotFound();
 
-            var creator = await _ur.FindUserAsync(result.URL!.CreatorId);
+            var creatorViewResult = await _uvs.ViewUserAsync(id);
 
-            if(creator is null)
+            if(creatorViewResult.Status == UserOperationResultCode.AbsentUser)
                 return NotFound();
 
             var model = new UrlViewModel
             {
-                OriginalURL = result.URL.OriginalURL,
-                ShortURLId = result.URL.ShortURLId,
-                Creator = creator.Login,
-                CreationDate = result.URL.CreationDate
+                OriginalURL = urlViewResult.URL.OriginalURL,
+                ShortURLId = urlViewResult.URL.ShortURLId,
+                Creator = creatorViewResult.User!.Login,
+                CreationDate = urlViewResult.URL.CreationDate
             };
 
             return View(model);
@@ -56,7 +54,7 @@ namespace URL_Shortener.Controllers
                     return Forbid();
 
                 case URLsOperationResultCode.DuplicateURL:
-                    var viewResult = await _uvs.ViewURLAsync(model.URL);
+                    var viewResult = await _urlVs.ViewURLAsync(model.URL);
                     return viewResult.Status == URLsOperationResultCode.Success ? Ok(viewResult.URL!.ShortURLId) :
                                                                                   Problem("Problem occured while searching for the existing url.");
 
@@ -69,7 +67,7 @@ namespace URL_Shortener.Controllers
         [HttpDelete("/delete/personal/{id}")]
         public async Task<IActionResult> DeletePersonalURL(int id)
         {
-            var viewResult = await _uvs.ViewURLAsync(id);
+            var viewResult = await _urlVs.ViewURLAsync(id);
 
             if (viewResult.Status == URLsOperationResultCode.AbsentURL)
                 return NotFound();
@@ -89,7 +87,7 @@ namespace URL_Shortener.Controllers
         [HttpDelete("/delete/{id}")]
         public async Task<IActionResult> DeleteURL(int id)
         {
-            var viewResult = await _uvs.ViewURLAsync(id);
+            var viewResult = await _urlVs.ViewURLAsync(id);
 
             if (viewResult.Status == URLsOperationResultCode.AbsentURL)
                 return NotFound();
