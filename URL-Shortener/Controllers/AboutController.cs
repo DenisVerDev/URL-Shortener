@@ -4,19 +4,20 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using URL_Shortener.Data.Repositories;
 using URL_Shortener.Models;
+using URL_Shortener.Services;
 
 namespace URL_Shortener.Controllers
 {
-    public class AboutController(IPostsRepository _pr) : Controller
+    public class AboutController(IPostsViewingService _pvs, IPostsManagementService _pms) : Controller
     {
         public async Task<IActionResult> Index()
         {
-            var aboutPost = await _pr.FindAboutPostAsync();
+            var viewResult = await _pvs.ViewAboutPostAsync();
 
             var model = new AboutViewModel
             {
                 IsAdmin = int.TryParse(User.FindFirstValue(ClaimTypes.Role), out int roleId) && roleId == 2,
-                Content = aboutPost?.Content
+                Content = viewResult.Post!.Content
             };
 
             return View(model);
@@ -29,14 +30,14 @@ namespace URL_Shortener.Controllers
             if (content.IsNullOrEmpty())
                 return BadRequest();
 
-            var aboutPost = await _pr.FindAboutPostAsync();
+            var viewResult = await _pvs.ViewAboutPostAsync();
 
-            if (aboutPost is null)
+            if (viewResult.Status == PostsOperationResultCode.AbsentPost)
                 return NotFound();
 
-            aboutPost.Content = content;
+            viewResult.Post!.Content = content;
 
-            await _pr.UpdatePostAsync(aboutPost);
+            await _pms.UpdatePostAsync(viewResult.Post);
 
             return Ok();
         }

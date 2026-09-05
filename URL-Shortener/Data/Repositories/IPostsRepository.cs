@@ -4,7 +4,7 @@ namespace URL_Shortener.Data.Repositories
 {
     public interface IPostsRepository
     {
-        Task<Post?> FindAboutPostAsync();
+        Task<Post?> FindPostAsync(int id);
 
         Task UpdatePostAsync(Post post);
     }
