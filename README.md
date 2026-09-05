@@ -13,3 +13,11 @@ A small URL-shortening application with authentication, role-based permissions, 
 ## Development Note
 
 I had never worked with Angular before creating this project, so the Angular part was created with the help of AI agent. Everything else was designed and implemented through my own knowledge and effort.
+
+## Users
+
+|login|password|
+|-|-|
+|denver2003|DenURL2103|
+|admin123|AdminURL123|
+|bystander07|bystander07|
