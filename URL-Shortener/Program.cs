@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using URL_Shortener.Data;
 using URL_Shortener.Data.Repositories;
@@ -46,7 +48,39 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     opt.Cookie.IsEssential = builder.Configuration.GetValue<bool>("Cookies:AuthCookie:IsEssential");
                 });
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 var app = builder.Build();
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+
+        var exceptionFeature = context.Features.Get<IExceptionHandlerFeature>();
+        var exception = exceptionFeature?.Error;
+
+        var traceId = context.TraceIdentifier;
+
+        logger.LogError(exception, "Unhandled exception. TraceId: {TraceId}, Path: {Path}", traceId, context.Request.Path);
+
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/problem+json";
+
+        await context.Response.WriteAsJsonAsync(new ProblemDetails
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "An unexpected error occurred.",
+            Detail = "Contact support with the traceId.",
+            Extensions =
+            {
+                ["traceId"] = traceId
+            }
+        });
+    });
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
