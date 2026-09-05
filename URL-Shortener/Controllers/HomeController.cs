@@ -11,7 +11,7 @@ using URL_Shortener.Services;
 
 namespace URL_Shortener.Controllers
 {
-    public class HomeController (IURLsRepository _urlR, IURLsViewingService _uvs) : Controller
+    public class HomeController (IURLsViewingService _uvs) : Controller
     {
         public IActionResult Index()
         {
@@ -21,8 +21,8 @@ namespace URL_Shortener.Controllers
         [HttpGet("/short/{shortUrlId}")]
         public async Task<IActionResult> RedirectToOriginalURL(string shortUrlId)
         {
-            var url = await _urlR.FirstURLAsync(u=>u.ShortURLId == shortUrlId);
-            return url is null ? NotFound() : Redirect(url.OriginalURL);
+            var viewResult = await _uvs.ViewShortURLAsync(shortUrlId);
+            return viewResult.Status == URLsOperationResultCode.AbsentURL ? NotFound() : Redirect(viewResult.URL!.OriginalURL);
         }
 
         [HttpGet("/urls")]
@@ -31,7 +31,7 @@ namespace URL_Shortener.Controllers
             if (!ModelState.IsValid)
                 return ValidationProblem(ModelState);
 
-            int totalCount = await _urlR.CountURLsAsync();
+            int totalCount = await _uvs.ViewURLsCountAsync();
 
             var result = await _uvs.ViewURLsAsync(model.PageIndex, model.PageSize);
 
