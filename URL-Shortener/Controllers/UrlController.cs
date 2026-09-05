@@ -19,7 +19,7 @@ namespace URL_Shortener.Controllers
             if(urlViewResult.Status == URLsOperationResultCode.AbsentURL)
                 return NotFound();
 
-            var creatorViewResult = await _uvs.ViewUserAsync(id);
+            var creatorViewResult = await _uvs.ViewUserAsync(urlViewResult.URL.CreatorId);
 
             if(creatorViewResult.Status == UserOperationResultCode.AbsentUser)
                 return NotFound();
